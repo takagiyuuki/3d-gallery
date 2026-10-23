@@ -22,14 +22,14 @@ deletion) still require confirmation first.
 
 ## Commands
 
-| Command | Purpose |
-|---|---|
-| `pnpm dev` | Vite dev server |
-| `pnpm fixtures` | Download Khronos sample models and generate `public/dev-models/index.json` |
-| `pnpm fixtures --with-broken` | Same, plus an entry with a missing GLB (error UI check) |
-| `pnpm build` | `tsc --noEmit` + `vite build` |
-| `pnpm typecheck` / `pnpm lint` / `pnpm format` / `pnpm test` | Individual checks |
-| `pnpm verify` | lint + typecheck + test + build (run by pre-push) |
+| Command                                                      | Purpose                                                                    |
+| ------------------------------------------------------------ | -------------------------------------------------------------------------- |
+| `pnpm dev`                                                   | Vite dev server                                                            |
+| `pnpm fixtures`                                              | Download Khronos sample models and generate `public/dev-models/index.json` |
+| `pnpm fixtures --with-broken`                                | Same, plus an entry with a missing GLB (error UI check)                    |
+| `pnpm build`                                                 | `tsc --noEmit` + `vite build`                                              |
+| `pnpm typecheck` / `pnpm lint` / `pnpm format` / `pnpm test` | Individual checks                                                          |
+| `pnpm verify`                                                | lint + typecheck + test + build (run by pre-push)                          |
 
 Environment: `VITE_MANIFEST_URL` (see `.env.example`). Defaults to `/dev-models/index.json` in dev only.
 
