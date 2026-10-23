@@ -1,0 +1,171 @@
+@import 'tailwindcss';
+@import '@fontsource-variable/noto-sans-jp';
+
+@plugin 'daisyui' {
+  themes: false;
+  logs: false;
+}
+
+/*
+ * Figma "Theme" variables, named after their Web code syntax (var(--color-accent-default), ...).
+ * Defined in @theme so they are both CSS variables and Tailwind utilities
+ * (bg-accent-default, p-md, rounded-md, ...). radius-sm / radius-md intentionally replace
+ * Tailwind's defaults with the Figma scale.
+ */
+@theme {
+  --font-sans: 'Noto Sans JP Variable', 'Noto Sans JP', system-ui, sans-serif;
+
+  --color-accent-default: #0b6bcb;
+  --color-text-primary: #1a1a1c;
+  --color-text-secondary: #5c5c61;
+  --color-text-on-accent: #ffffff;
+  --color-surface-overlay: #ffffff;
+  --color-border-glass: #ffffff;
+  --color-surface-thumbnail: #d9d9de;
+  --color-surface-track-off: #a8a8a8;
+  --color-surface-knob: #ffffff;
+
+  --spacing-xs: 4px;
+  --spacing-sm: 8px;
+  --spacing-md: 12px;
+  --spacing-lg: 16px;
+
+  --radius-sm: 8px;
+  --radius-md: 16px;
+  --radius-full: 999px;
+
+  /* Figma text styles */
+  --text-title: 15px;
+  --text-title--line-height: 1.4;
+  --text-label: 13px;
+  --text-label--line-height: 1.4;
+  --text-caption: 11px;
+  --text-caption--line-height: 1.4;
+  --text-body: 13px;
+  --text-body--line-height: 1.6;
+}
+
+/* daisyUI theme mapped onto the Figma tokens. */
+@plugin 'daisyui/theme' {
+  name: 'gallery';
+  default: true;
+  prefersdark: false;
+  color-scheme: light;
+
+  --color-base-100: #ffffff;
+  --color-base-200: #f4f4f6;
+  --color-base-300: #d9d9de;
+  --color-base-content: #1a1a1c;
+  --color-primary: #0b6bcb;
+  --color-primary-content: #ffffff;
+  --color-secondary: #5c5c61;
+  --color-secondary-content: #ffffff;
+  --color-accent: #0b6bcb;
+  --color-accent-content: #ffffff;
+  --color-neutral: #1a1a1c;
+  --color-neutral-content: #ffffff;
+  --color-info: #0b6bcb;
+  --color-info-content: #ffffff;
+  --color-success: #1f8a4c;
+  --color-success-content: #ffffff;
+  --color-warning: #c27c0e;
+  --color-warning-content: #ffffff;
+  --color-error: #c62f3a;
+  --color-error-content: #ffffff;
+
+  --radius-selector: 999px;
+  --radius-field: 8px;
+  --radius-box: 16px;
+  --size-selector: 0.25rem;
+  --size-field: 0.25rem;
+  --border: 1px;
+  --depth: 0;
+  --noise: 0;
+}
+
+@layer base {
+  html,
+  body {
+    /* Fixed, non-scrolling app shell (mobile address bar aware). */
+    height: 100dvh;
+    overflow: hidden;
+    overscroll-behavior: none;
+  }
+
+  body {
+    @apply font-sans text-text-primary;
+    /* Shown through the transparent WebGL canvas (Figma "Canvas" placeholder gradient). */
+    background: linear-gradient(160deg, #29334d 14%, #6b738c 54%, #dbc7b2 86%) fixed;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-accent-default);
+    outline-offset: 2px;
+  }
+}
+
+@layer components {
+  /*
+   * Figma effect style "Overlay/Glass": background blur 20 (CSS blur 10px) + drop shadow.
+   * The Figma token is opaque white; the glass alpha is applied here.
+   */
+  .glass-panel {
+    background-color: color-mix(in oklab, var(--color-surface-overlay) 72%, transparent);
+    border: 1px solid color-mix(in oklab, var(--color-border-glass) 60%, transparent);
+    box-shadow: 0 4px 16px rgb(0 0 0 / 0.12);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+  }
+
+  .model-nav-scroll {
+    scrollbar-width: thin;
+    scrollbar-color: var(--color-text-secondary) transparent;
+  }
+
+  .no-scrollbar {
+    scrollbar-width: none;
+    &::-webkit-scrollbar {
+      display: none;
+    }
+  }
+}
+
+/*
+ * daisyUI places its component styles in sub-layers of `utilities`; rules written directly in
+ * `utilities` take precedence over those sub-layers, so overrides of daisyUI parts live here.
+ */
+@layer utilities {
+  /* Figma Toggle (44x24, knob 20): filled track instead of daisyUI's outlined style. */
+  .toggle.gallery-toggle {
+    --size: 24px;
+    --toggle-p: 2px;
+    --border: 0px;
+    --input-color: var(--color-surface-knob);
+    background-color: var(--color-surface-track-off);
+    box-shadow: none;
+    &:checked {
+      background-color: var(--color-accent-default);
+      --input-color: var(--color-surface-knob);
+    }
+    &::before {
+      box-shadow: 0 1px 2px rgb(0 0 0 / 0.2);
+    }
+    &:focus-visible {
+      outline: 2px solid var(--color-accent-default);
+      outline-offset: 2px;
+    }
+    &:disabled {
+      opacity: 0.35;
+      &::before {
+        border: none;
+        background-color: var(--color-surface-knob);
+      }
+    }
+  }
+
+  /* Fade the right edge of the mobile model bar to hint that it scrolls horizontally. */
+  .scroll-fade-end {
+    mask-image: linear-gradient(to right, #000 calc(100% - 32px), transparent);
+  }
+}

@@ -18,6 +18,7 @@
       "!**/node_modules",
       "!**/dist",
       "!**/public/dev-models",
+      "!src/assets/icons",
       "!**/.direnv",
       "!**/.git",
       "!**/.jj",
