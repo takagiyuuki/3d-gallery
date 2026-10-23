@@ -21,8 +21,6 @@ export interface ViewerOptions {
   playing?: boolean;
   /** Upper bound for devicePixelRatio (GPU load on high-DPI mobiles). Default 2. */
   maxPixelRatio?: number;
-  /** Directory serving draco_wasm_wrapper.js / draco_decoder.wasm. Default `/draco/`. */
-  dracoDecoderPath?: string;
 }
 
 export interface Viewer {

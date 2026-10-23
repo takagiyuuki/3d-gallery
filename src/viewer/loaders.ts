@@ -1,5 +1,5 @@
 import { MeshoptDecoder } from 'three/addons/libs/meshopt_decoder.module.js';
-import { DRACOLoader } from 'three/addons/loaders/DRACOLoader.js';
+import { DRACO_GLTF_CONFIG, DRACOLoader } from 'three/addons/loaders/DRACOLoader.js';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 
 export interface GltfLoaders {
@@ -7,9 +7,12 @@ export interface GltfLoaders {
   dispose(): void;
 }
 
-/** GLTFLoader that can read Draco- and Meshopt-compressed files. */
-export function createGltfLoaders(dracoDecoderPath: string): GltfLoaders {
-  const draco = new DRACOLoader().setDecoderPath(dracoDecoderPath);
+/**
+ * GLTFLoader that can read Draco- and Meshopt-compressed files. DRACO_GLTF_CONFIG references the
+ * glTF-specific decoder via `new URL(..., import.meta.url)`, so Vite bundles and self-hosts it.
+ */
+export function createGltfLoaders(): GltfLoaders {
+  const draco = new DRACOLoader().setDecoderPath(DRACO_GLTF_CONFIG);
   const gltf = new GLTFLoader().setDRACOLoader(draco).setMeshoptDecoder(MeshoptDecoder);
   return {
     gltf,

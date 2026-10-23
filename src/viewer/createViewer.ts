@@ -50,7 +50,7 @@ export function createViewer(canvas: HTMLCanvasElement, options: ViewerOptions =
   controls.enablePan = false;
   controls.autoRotateSpeed = 1.5;
 
-  const loaders = createGltfLoaders(options.dracoDecoderPath ?? '/draco/');
+  const loaders = createGltfLoaders();
 
   let state: ViewerState = {
     status: 'idle',
