@@ -22,10 +22,12 @@
     "valibot": "^1.5.0"
   },
   "devDependencies": {
+    "@biomejs/biome": "^2.6.2",
     "@tailwindcss/vite": "^4.3.3",
     "@types/node": "^24.19.2",
     "@types/three": "^0.186.0",
     "daisyui": "^5.7.50",
+    "lefthook": "^2.2.2",
     "tailwindcss": "^4.3.3",
     "typescript": "^7.0.2",
     "vite": "^8.3.5",
