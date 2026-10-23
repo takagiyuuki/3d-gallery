@@ -1,4 +1,13 @@
-import { BoxGeometry, Group, Mesh, MeshStandardMaterial, Texture } from 'three';
+import {
+  Bone,
+  BoxGeometry,
+  Group,
+  Mesh,
+  MeshStandardMaterial,
+  Skeleton,
+  SkinnedMesh,
+  Texture,
+} from 'three';
 import { describe, expect, it, vi } from 'vitest';
 import { disposeObject3D } from './dispose.ts';
 import { computeFraming, fitDistance } from './framing.ts';
@@ -76,5 +85,14 @@ describe('disposeObject3D', () => {
     expect(spies.geometryB).toHaveBeenCalledOnce();
     expect(spies.material).toHaveBeenCalledOnce();
     expect(spies.texture).toHaveBeenCalled();
+  });
+
+  it('disposes skeletons of skinned meshes (bone textures)', () => {
+    const mesh = new SkinnedMesh(new BoxGeometry(), new MeshStandardMaterial());
+    const skeleton = new Skeleton([new Bone()]);
+    mesh.bind(skeleton);
+    const spy = vi.spyOn(skeleton, 'dispose');
+    disposeObject3D(mesh);
+    expect(spy).toHaveBeenCalledOnce();
   });
 });

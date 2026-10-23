@@ -1,4 +1,4 @@
-import { type Material, Mesh, type Object3D, Texture } from 'three';
+import { type Material, Mesh, type Object3D, SkinnedMesh, Texture } from 'three';
 
 function disposeTexture(texture: Texture): void {
   texture.dispose();
@@ -15,12 +15,16 @@ function disposeMaterial(material: Material): void {
   material.dispose();
 }
 
-/** Releases GPU resources (geometries, materials, textures) owned by `root` and its children. */
+/**
+ * Releases GPU resources owned by `root` and its children: geometries, materials, textures and
+ * skeleton bone textures (created by the renderer for skinned meshes, not reachable via materials).
+ */
 export function disposeObject3D(root: Object3D): void {
   const materials = new Set<Material>();
   root.traverse((object) => {
     if (!(object instanceof Mesh)) return;
     object.geometry.dispose();
+    if (object instanceof SkinnedMesh) object.skeleton.dispose();
     const list: Material[] = Array.isArray(object.material) ? object.material : [object.material];
     for (const material of list) materials.add(material);
   });

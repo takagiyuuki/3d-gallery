@@ -25,6 +25,12 @@ function abortError(): DOMException {
   return new DOMException('Superseded by a newer load', 'AbortError');
 }
 
+/** Rejects non-GLB responses (e.g. an HTML fallback page served for a missing file). */
+function assertGlb(buffer: ArrayBuffer): void {
+  const magic = new TextDecoder().decode(new Uint8Array(buffer, 0, Math.min(4, buffer.byteLength)));
+  if (magic !== 'glTF') throw new Error('The file is not a GLB (binary glTF) model');
+}
+
 /**
  * Framework-agnostic glTF viewer bound to `canvas`. Throws if a WebGL context cannot be created.
  */
@@ -144,6 +150,7 @@ export function createViewer(canvas: HTMLCanvasElement, options: ViewerOptions =
         if (id === loadId) setState({ progress });
       });
       if (id !== loadId) throw abortError();
+      assertGlb(buffer);
 
       const resourcePath = new URL('.', url).href;
       const gltf = await loaders.gltf.parseAsync(buffer, resourcePath);
