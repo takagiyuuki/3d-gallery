@@ -40,16 +40,25 @@ src/
   main.ts              bootstrap: WebGL check → manifest → viewer → UI → router
   manifest/schema.ts   valibot schema + types; depends only on valibot (may be shared with 3d-models)
   viewer/              framework-agnostic three.js viewer: createViewer(canvas, options)
-  ui/                  vanilla DOM renderers + tiny store
+  ui/                  vanilla DOM renderers (createElement + textContent)
   router.ts            ?model=<id> <-> state (pushState / popstate)
 scripts/fixtures.ts    dev fixture generator (Node 24 native TS)
 ```
 
 ## Viewer invariants
 
-- Switching models must `dispose()` all geometries, materials and textures of the previous model.
-  Check with `window.__viewer.renderer.info.memory` in dev.
+- Switching models must `dispose()` all geometries, materials, textures and skeletons (bone
+  textures) of the previous model. Check with `__viewer.getMemoryInfo()` in the dev console.
 - A superseded load is aborted (fetch) or discarded and disposed after parse; it must never be shown.
 - The viewer knows nothing about the DOM layout; the UI passes `setInsets()` and the viewer centers
   the model in the uncovered area via `camera.setViewOffset`.
 - Manifest data is untrusted: render text with `textContent`, never `innerHTML`.
+- Draco decoders are bundled by Vite through three's `DRACO_GLTF_CONFIG` (`new URL(..., import.meta.url)`);
+  no manual copy step. Meshopt decoder is a regular import.
+
+## Styling gotchas
+
+- Figma tokens are defined in `@theme` with their Figma names. `--spacing-sm` etc. shadow Tailwind's
+  named sizes: `max-w-sm` becomes 8px. Use arbitrary values (`max-w-[24rem]`) for container sizes.
+- daisyUI 5 puts component CSS in sub-layers of `utilities`; overrides of daisyUI parts must be in
+  `@layer utilities` (not `components`) to win.
