@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="ja" data-theme="gallery">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="description" content="Self-made 3DCG models viewer." />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <title>3DCG Gallery</title>
+  </head>
+  <body>
+    <canvas id="viewer" class="fixed inset-0 block size-full touch-none" aria-label="3D model viewer"></canvas>
+
+    <!-- All UI is overlaid on the full-screen canvas. Only panels receive pointer events. -->
+    <div
+      id="ui"
+      class="pointer-events-none fixed inset-0 pt-[env(safe-area-inset-top)] pr-[env(safe-area-inset-right)] pb-[env(safe-area-inset-bottom)] pl-[env(safe-area-inset-left)]"
+    >
+      <div class="relative size-full">
+        <!-- Mobile: title + controls stacked top-left. Desktop: positioned independently. -->
+        <header
+          id="top-bar"
+          class="absolute top-[16px] left-[16px] flex flex-col items-start gap-[8px] md:contents"
+        >
+          <h1
+            class="glass-panel pointer-events-auto rounded-full px-lg py-sm text-title font-bold md:absolute md:top-[24px] md:left-[24px]"
+          >
+            3DCG Gallery
+          </h1>
+
+          <div
+            id="viewer-controls"
+            class="glass-panel pointer-events-auto flex items-center gap-lg rounded-full px-lg py-sm md:absolute md:top-[24px] md:right-[24px]"
+          >
+            <label class="flex cursor-pointer items-center gap-sm text-label font-medium">
+              Auto rotate
+              <input id="toggle-auto-rotate" type="checkbox" class="toggle gallery-toggle" />
+            </label>
+            <label
+              id="play-field"
+              class="flex cursor-pointer items-center gap-sm text-label font-medium has-disabled:cursor-not-allowed"
+            >
+              Play
+              <input id="toggle-play" type="checkbox" class="toggle gallery-toggle" disabled />
+            </label>
+          </div>
+        </header>
+
+        <!-- Desktop sidebar (Figma ModelNav). -->
+        <nav
+          id="model-nav"
+          aria-label="Models"
+          class="glass-panel pointer-events-auto absolute top-[79px] left-[24px] hidden has-[ul:empty]:hidden! max-h-[calc(100%-103px)] w-[208px] flex-col gap-sm rounded-md p-md md:flex"
+        >
+          <p class="text-caption text-text-secondary">Models</p>
+          <ul class="model-nav-scroll flex min-h-0 flex-col gap-xs overflow-y-auto pr-[6px]"></ul>
+        </nav>
+
+        <!-- Bottom stack. Desktop: review panel centered in the area right of the sidebar. -->
+        <div
+          id="bottom-bar"
+          class="absolute right-[10px] bottom-[8px] left-[10px] flex flex-col items-center gap-[8px] md:right-0 md:bottom-[24px] md:left-[232px] md:px-[24px]"
+        >
+          <details id="review-panel" class="group collapse glass-panel pointer-events-auto w-full rounded-md md:max-w-[560px]">
+            <summary class="collapse-title flex min-h-0 items-center gap-sm px-lg py-md">
+              <span class="shrink-0 text-label font-medium">レビュー情報</span>
+              <span id="review-summary" class="min-w-0 flex-1 truncate text-caption text-text-secondary"></span>
+              <img class="shrink-0 group-open:hidden" src="/src/assets/icons/chevron-up.svg" alt="" width="20" height="20" />
+              <img class="hidden shrink-0 group-open:block" src="/src/assets/icons/chevron-down.svg" alt="" width="20" height="20" />
+            </summary>
+            <div class="collapse-content flex flex-col gap-md px-lg pb-md">
+              <dl id="review-stats" class="flex flex-wrap gap-x-lg gap-y-sm"></dl>
+              <p id="review-notes" class="text-body whitespace-pre-line"></p>
+              <p id="review-credit" class="text-caption text-text-secondary"></p>
+            </div>
+          </details>
+
+          <!-- Mobile horizontal list (Figma ModelNavBar). -->
+          <nav
+            id="model-nav-bar"
+            aria-label="Models"
+            class="glass-panel pointer-events-auto w-full rounded-md p-sm has-[ul:empty]:hidden md:hidden"
+          >
+            <ul class="no-scrollbar scroll-fade-end flex snap-x gap-sm overflow-x-auto"></ul>
+          </nav>
+
+          <footer class="p-[3px] text-caption text-text-secondary md:hidden">© 2026 yukit</footer>
+        </div>
+
+        <!-- Loading / error / unsupported states, centered over the canvas. -->
+        <div id="status" class="absolute inset-0 hidden items-center justify-center p-lg" aria-live="polite"></div>
+      </div>
+    </div>
+
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>

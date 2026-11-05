@@ -1,0 +1,4 @@
+title = "gitleaks config for 3d-gallery"
+
+[extend]
+useDefault = true

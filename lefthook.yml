@@ -1,0 +1,30 @@
+# yaml-language-server: $schema=./node_modules/lefthook/schema.json
+pre-commit:
+  parallel: true
+  commands:
+    gitleaks:
+      run: gitleaks git --staged --verbose --redact --no-banner
+      fail_text: "Secret detected! Commit aborted."
+    biome:
+      glob: "*.{js,ts,json,jsonc,css,html}"
+      run: pnpm exec biome check --write --no-errors-on-unmatched {staged_files}
+      stage_fixed: true
+    typecheck:
+      glob: "*.ts"
+      run: pnpm typecheck
+pre-push:
+  parallel: false
+  commands:
+    gitleaks:
+      run: gitleaks git --verbose --redact --no-banner
+      fail_text: "Secret detected in history! Push aborted."
+    verify:
+      run: pnpm verify
+commit-msg:
+  commands:
+    conventional:
+      run: |
+        msg=$(cat {1})
+        if ! echo "$msg" | grep -qE "^(feat|fix|docs|style|refactor|perf|test|chore|ci|build|revert)(\(.+\))?: .+"; then
+          echo "warn: commit message does not follow Conventional Commits (ignored)"
+        fi
